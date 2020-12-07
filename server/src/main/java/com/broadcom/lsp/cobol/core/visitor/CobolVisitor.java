@@ -355,7 +355,8 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
       areaAWarning(token);
     }
     String levelNumber = ctx.LEVEL_NUMBER().getText();
-    ofNullable(ctx.dataName1())
+    ofNullable(ctx.entryName())
+        .map(EntryNameContext::dataName1)
         .ifPresent(
             variable ->
                 getLocality(variable.getStart())
@@ -363,7 +364,10 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
                     .ifPresent(
                         location -> defineVariable(levelNumber, variable.getText(), location)));
     String name =
-        ofNullable(ctx.dataName1()).map(RuleContext::getText).orElse(OutlineNodeNames.FILLER_NAME);
+        ofNullable(ctx.entryName())
+            .map(EntryNameContext::dataName1)
+            .map(RuleContext::getText)
+            .orElse(OutlineNodeNames.FILLER_NAME);
     int level = Integer.parseInt(levelNumber);
     outlineTreeBuilder.addVariable(level, name, getDataDescriptionNodeType(ctx), ctx);
     ofNullable(ctx.dataOccursClause())
@@ -387,30 +391,40 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
   @Override
   public Class visitDataDescriptionEntryFormat2(DataDescriptionEntryFormat2Context ctx) {
     String levelNumber = ctx.LEVEL_NUMBER_66().getText();
-    ofNullable(ctx.dataName1())
+    ofNullable(ctx.entryName())
+        .map(EntryNameContext::dataName1)
         .ifPresent(
             variable ->
                 getLocality(variable.getStart())
                     .map(Locality::toLocation)
                     .ifPresent(
                         location -> defineVariable(levelNumber, variable.getText(), location)));
-    outlineTreeBuilder.addVariable(
-        CobolVariableContext.LEVEL_66, ctx.dataName1().getText(), NodeType.FIELD_66, ctx);
+    String name =
+        ofNullable(ctx.entryName())
+            .map(EntryNameContext::dataName1)
+            .map(RuleContext::getText)
+            .orElse(OutlineNodeNames.FILLER_NAME);
+    outlineTreeBuilder.addVariable(CobolVariableContext.LEVEL_66, name, NodeType.FIELD_66, ctx);
     return visitChildren(ctx);
   }
 
   @Override
   public Class visitDataDescriptionEntryFormat3(DataDescriptionEntryFormat3Context ctx) {
     String levelNumber = ctx.LEVEL_NUMBER_88().getText();
-    ofNullable(ctx.dataName1())
+    ofNullable(ctx.entryName())
+        .map(EntryNameContext::dataName1)
         .ifPresent(
             variable ->
                 getLocality(variable.getStart())
                     .map(Locality::toLocation)
                     .ifPresent(
                         location -> defineVariable(levelNumber, variable.getText(), location)));
-    outlineTreeBuilder.addVariable(
-        CobolVariableContext.LEVEL_88, ctx.dataName1().getText(), NodeType.FIELD_88, ctx);
+    String name =
+        ofNullable(ctx.entryName())
+            .map(EntryNameContext::dataName1)
+            .map(RuleContext::getText)
+            .orElse(OutlineNodeNames.FILLER_NAME);
+    outlineTreeBuilder.addVariable(CobolVariableContext.LEVEL_88, name, NodeType.FIELD_88, ctx);
     return visitChildren(ctx);
   }
 
@@ -418,7 +432,8 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
   public Class visitDataDescriptionEntryFormat1Level77(
       DataDescriptionEntryFormat1Level77Context ctx) {
     areaAWarning(ctx.getStart());
-    ofNullable(ctx.dataName1())
+    ofNullable(ctx.entryName())
+        .map(EntryNameContext::dataName1)
         .ifPresent(
             variable ->
                 getLocality(variable.getStart())
@@ -428,7 +443,10 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
                             defineVariable(
                                 String.valueOf(LEVEL_77), variable.getText(), location)));
     String name =
-        ofNullable(ctx.dataName1()).map(RuleContext::getText).orElse(OutlineNodeNames.FILLER_NAME);
+        ofNullable(ctx.entryName())
+            .map(EntryNameContext::dataName1)
+            .map(RuleContext::getText)
+            .orElse(OutlineNodeNames.FILLER_NAME);
 
     outlineTreeBuilder.addVariable(LEVEL_77, name, NodeType.FIELD, ctx);
     ofNullable(ctx.dataOccursClause())
@@ -484,14 +502,18 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
   @Override
   public Class visitCallStatement(CallStatementContext ctx) {
     if (ctx.literal() != null) {
-      String subroutineName = PreprocessorStringUtils.trimQuotes(ctx.literal().getText()).toUpperCase();
+      String subroutineName =
+          PreprocessorStringUtils.trimQuotes(ctx.literal().getText()).toUpperCase();
       var locality = getLocality(ctx.literal().getStart());
-      locality.ifPresent(it -> {
-        if (subroutineService.getUri(subroutineName).isEmpty()) {
-          reportSubroutineNotDefined(subroutineName, it);
-        }
-      });
-      locality.map(Locality::toLocation).ifPresent(location -> subroutineUsages.put(subroutineName, location));
+      locality.ifPresent(
+          it -> {
+            if (subroutineService.getUri(subroutineName).isEmpty()) {
+              reportSubroutineNotDefined(subroutineName, it);
+            }
+          });
+      locality
+          .map(Locality::toLocation)
+          .ifPresent(location -> subroutineUsages.put(subroutineName, location));
     }
     return visitChildren(ctx);
   }
@@ -571,11 +593,12 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
   private DataName2Context getDataName2Context(QualifiedInDataContext node) {
     return ofNullable(node.inData())
         .map(InDataContext::dataName2)
-        .orElse(
-            ofNullable(node.inTable())
-                .map(InTableContext::tableCall)
-                .map(TableCallContext::dataName2)
-                .orElse(null));
+        .orElseGet(
+            () ->
+                ofNullable(node.inTable())
+                    .map(InTableContext::tableCall)
+                    .map(TableCallContext::dataName2)
+                    .orElse(null));
   }
 
   private void checkVariableStructure(
@@ -720,7 +743,9 @@ public class CobolVisitor extends CobolParserBaseVisitor<Class> {
         .collect(toMap(Pair::getKey, CobolVisitor::getSubroutineLocation));
   }
 
-  private static Collection<Location> getSubroutineLocation(ImmutablePair<String, Optional<String>> subroutinePair) {
-    return List.of(new Location(subroutinePair.getValue().get(), new Range(new Position(), new Position())));
+  private static Collection<Location> getSubroutineLocation(
+      ImmutablePair<String, Optional<String>> subroutinePair) {
+    return List.of(
+        new Location(subroutinePair.getValue().get(), new Range(new Position(), new Position())));
   }
 }

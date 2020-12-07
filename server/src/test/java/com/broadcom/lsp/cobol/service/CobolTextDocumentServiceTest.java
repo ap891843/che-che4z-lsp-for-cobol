@@ -139,10 +139,11 @@ class CobolTextDocumentServiceTest extends MockTextDocumentService {
   }
 
   @Test
-  void testNotAllowedFileExtensionAnalysis() {
+  void testNotAllowedFileExtensionAnalysis() throws ExecutionException, InterruptedException {
     service.didOpen(
         new DidOpenTextDocumentParams(
             new TextDocumentItem(CPY_DOCUMENT_URI, LANGUAGE, 1, TEXT_EXAMPLE)));
+    service.getOutlineMap().get(CPY_DOCUMENT_URI).get();
     assertTrue(service.getOutlineMap().get(CPY_DOCUMENT_URI).isDone());
     verify(communications).notifyThatExtensionIsUnsupported(anyString());
   }
@@ -454,7 +455,7 @@ class CobolTextDocumentServiceTest extends MockTextDocumentService {
     service.formatting(
         new DocumentFormattingParams(
             new TextDocumentIdentifier(UseCaseUtils.DOCUMENT_URI),
-            new FormattingOptions(1, false)));
+            new FormattingOptions(1, false))).get();
 
     verify(formations).format(any(CobolDocumentModel.class));
   }
@@ -474,7 +475,7 @@ class CobolTextDocumentServiceTest extends MockTextDocumentService {
     service.getFutureMap().get(UseCaseUtils.DOCUMENT_URI).get();
     service.definition(
         new TextDocumentPositionParams(
-            new TextDocumentIdentifier(UseCaseUtils.DOCUMENT_URI), new Position()));
+            new TextDocumentIdentifier(UseCaseUtils.DOCUMENT_URI), new Position())).get();
     verify(occurrences)
         .findDefinitions(any(CobolDocumentModel.class), any(TextDocumentPositionParams.class));
   }
@@ -498,7 +499,7 @@ class CobolTextDocumentServiceTest extends MockTextDocumentService {
     ReferenceParams referenceParams = new ReferenceParams();
     referenceParams.setContext(new ReferenceContext(true));
     referenceParams.setTextDocument(new TextDocumentIdentifier(UseCaseUtils.DOCUMENT_URI));
-    service.references(referenceParams);
+    service.references(referenceParams).get();
     verify(occurrences)
         .findReferences(
             any(CobolDocumentModel.class),
