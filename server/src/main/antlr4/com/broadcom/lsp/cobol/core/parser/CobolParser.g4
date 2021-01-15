@@ -77,7 +77,7 @@ environmentDivision
    ;
 
 environmentDivisionBody
-   : configurationSection | specialNamesParagraph | inputOutputSection
+   : configurationSection | specialNamesParagraph | inputOutputSection | idmsControlSection
    ;
 
 // -- configuration section ----------------------------------
@@ -351,6 +351,57 @@ commitmentControlClause
    : COMMITMENT CONTROL FOR? fileName
    ;
 
+// -- idms control section ----------------------------------
+
+idmsControlSection
+   : IDMS_CONTROL SECTION DOT_FS idmsControlSectionParagraph
+   ;
+
+// - idms control section paragraph ----------------------------------
+idmsControlSectionParagraph
+   : protocolParagraph (ssNamesLengthParagraph | idmsRecordLocationParagraph)*
+   ;
+
+protocolParagraph
+   : PROTOCOL DOT_FS? protocolEntry? 
+   ;
+
+protocolEntry
+   : modeClause DEBUG? endClause?
+   ;
+
+modeClause
+   : MODE IS? cobolWord
+   ;
+
+ssNamesLengthParagraph
+   : SSNAMES LENGTH IS? ss_names_length endClause?
+   ;
+
+idmsRecordLocationParagraph
+   : IDMS_RECORDS withinClause endClause?
+   ;
+
+withinClause
+   : (withinEntry | MANUAL) levelsClause?
+   ;
+
+withinEntry
+   : WITHIN (WORKING_STORAGE | LINKAGE) SECTION?
+   ;
+
+levelsClause
+   : LEVELS? INCREMENTED BY? LEVEL_NUMBER
+   ;
+
+endClause
+    : DOT_FS | SEMICOLON_FS
+    ;
+
+ss_names_length
+       : {_input.LT(1).getText().matches("16|18")}? LEVEL_NUMBER
+       ;
+
 // --- data division --------------------------------------------------------------------
 
 dataDivision
@@ -358,7 +409,7 @@ dataDivision
    ;
 
 dataDivisionSection
-   : fileSection | workingStorageSection | linkageSection | localStorageSection
+   : fileSection | workingStorageSection | linkageSection | localStorageSection | schemaSection | mapSection
    ;
 
 // -- file section ----------------------------------
@@ -644,6 +695,33 @@ dataValueIntervalTo
 dataWithLowerBoundsClause
    : WITH? LOWER BOUNDS
    ;
+// -- schema section ----------------------------------
+
+schemaSection
+   : SCHEMA SECTION DOT_FS schemaDBEntry
+   ;
+
+schemaDBEntry
+   : DB cobolWord WITHIN cobolWord versionClause? DOT_FS
+   ;
+
+// -- map section ----------------------------------
+
+mapSection
+   : MAP SECTION DOT_FS maxFieldListClause? mapClause+
+   ;
+
+maxFieldListClause
+   :  MAX FIELD LIST IS? integerLiteral DOT_FS?
+   ;
+
+mapClause
+    : MAP cobolWord versionClause? (TYPE IS? (STANDARD | EXTENDED) PAGING?)? DOT_FS?
+    ;
+
+versionClause
+    : VERSION integerLiteral
+    ;
 
 // --- procedure division --------------------------------------------------------------------
 
@@ -1028,9 +1106,9 @@ execCicsStatement
    ;
 
 // exec sql statement
-
 execSqlStatement
-   : EXEC SQL ~END_EXEC*? END_EXEC DOT_FS?
+   : EXEC_SQL allSqlRules END_EXEC DOT_FS?
+   | (EXEC | SQL) {notifyErrorListeners("Missing token EXEC or SQL at execSqlStatement");} allSqlRules END_EXEC DOT_FS?
    ;
 
 // exec sql ims statement
@@ -1650,7 +1728,7 @@ subtractStatement
    ;
 
 subtractFromStatement
-   : subtractSubtrahend+ FROM subtractMinuend+
+   :  subtractSubtrahend+ FROM subtractMinuend+
    ;
 
 subtractFromGivingStatement

@@ -12,16 +12,3 @@
  *    Broadcom, Inc. - initial API and implementation
  *
  */
-
-package com.broadcom.lsp.cobol.service.delegates.references;
-
-import org.junit.jupiter.api.BeforeEach;
-
-/** Test {@link ParagraphLocations} */
-class ParagraphLocationsTest extends AbstractReferenceTest {
-
-  @BeforeEach
-  void setUp() {
-    this.provider = new ParagraphLocations();
-  }
-}

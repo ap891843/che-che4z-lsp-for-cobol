@@ -13,6 +13,7 @@
  */
 parser grammar CICSParser;
 options {tokenVocab = CobolLexer;}
+import Db2SqlParser;
 
 allRules: cics_send | cics_receive | cics_add | cics_address | cics_allocate | cics_asktime | cics_assign | cics_bif |
           cics_build | cics_cancel | cics_change | cics_change_task | cics_check | cics_connect | cics_converttime |
@@ -926,7 +927,7 @@ cics_value: LPARENCHAR ptr_value RPARENCHAR;
 empty_parens: LPARENCHAR RPARENCHAR;
 
 cobolWord
-   : IDENTIFIER | cics_only_words
+   : IDENTIFIER | cics_only_words | db2sql_only_words1
    | ABORT | AS | ASCII | ASSOCIATED_DATA | ASSOCIATED_DATA_LENGTH
    | BINARY | BIT | BLOB | BOUNDS
    | CAPABLE | CCSVERSION | CHANGED | CHANNEL | CLOB | CLOSE_DISPOSITION | COBOL | COMMITMENT | CONTROL_POINT | CONVENTION | COUNT | CRUNCH | CURSOR
@@ -936,14 +937,14 @@ cobolWord
    | IMPLICIT | INTEGER | IN
    | KEPT | KEYBOARD
    | LANGUAGE | LIBRARY | LIST | LOCAL | LONG_DATE | LONG_TIME | LOWER
-   | MMDDYYYY
+   | MMDDYYYY | MAX
    | NAMED | NATIONAL | NATIONAL_EDITED | NETWORK | NUMERIC_DATE | NUMERIC_TIME
    | ODT | ORDERLY | OWN | OF
    | PASSWORD | PORT | PRINTER | PROCESS | PROGRAM
    | READER | REAL | RECEIVED | RECURSIVE | REF | REMOTE | REMOVE
-   | SAVE | SHARED | SHORT_DATE | SQL | SYMBOL
+   | SAVE | SCHEMA | SHARED | SHORT_DATE | SQL | SYMBOL
    | TASK | THREAD | THREAD_LOCAL | TIMER | TODAYS_DATE | TODAYS_NAME | TRUNCATED | TYPEDEF
-   | VIRTUAL
+   | VERSION | VIRTUAL
    | WAIT
    | YEAR | YYYYMMDD | YYYYDDD
    ;
@@ -1192,7 +1193,7 @@ integerLiteral
    ;
 
 literal
-   : NONNUMERICLITERAL | figurativeConstant | numericLiteral | booleanLiteral | cicsDfhRespLiteral | cicsDfhValueLiteral | charString
+   : NONNUMERICLITERAL | figurativeConstant | numericLiteral | booleanLiteral | cicsDfhRespLiteral | cicsDfhValueLiteral | charString | DATELITERAL
    ;
 
 charString
