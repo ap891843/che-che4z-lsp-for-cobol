@@ -413,12 +413,10 @@ public class GrammarPreprocessorListenerImpl extends CobolPreprocessorBaseListen
     Position stopPosition;
     if (isTokenRepositioned(token)) {
       Collection<CobolLine> continueCobolLines = positionCorrectionMap.get(token.getLine() - 1);
-      CobolLine continueCobolLine = continueCobolLines.stream()
-              .filter(cl -> cl.getContentArea().contains(token.getText()))
-              .findFirst().get();
+      CobolLine cobolLine = ((List<CobolLine>) continueCobolLines).get(continueCobolLines.size()-1);
       int horizontalCoordinate =
-              continueCobolLine.getContentArea().indexOf(token.getText()) + INDICATOR_POSITION;
-      int verticalCoordinate = continueCobolLine.getNumber();
+              cobolLine.getContentArea().indexOf(token.getText()) + INDICATOR_POSITION;
+      int verticalCoordinate = cobolLine.getNumber();
       startPosition = new Position(verticalCoordinate, horizontalCoordinate);
       stopPosition =
           new Position(
