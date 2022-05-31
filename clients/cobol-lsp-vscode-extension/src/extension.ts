@@ -20,28 +20,30 @@ import { C4Z_FOLDER, GITIGNORE_FILE, LANGUAGE_ID } from "./constants";
 import { CopybookDownloadService } from "./services/copybook/CopybookDownloadService";
 import { CopybooksCodeActionProvider } from "./services/copybook/CopybooksCodeActionProvider";
 
+import { CommentAction, commentCommand } from "./commands/CommentCommand";
 import { initSmartTab } from "./commands/SmartTabCommand";
 import { LanguageClientService } from "./services/LanguageClientService";
 import { Middleware } from "./services/Middleware";
 import { TelemetryService } from "./services/reporter/TelemetryService";
-import { createFileWithGivenPath, SettingsService } from "./services/Settings";
-import { resolveSubroutineURI } from "./services/util/SubroutineUtils";
+import { createFileWithGivenPath} from "./services/Settings";
 import { SnippetCompletionProvider } from "./services/snippetcompletion/SnippetCompletionProvider";
-import { CommentAction, commentCommand } from "./commands/CommentCommand";
+import { resolveSubroutineURI } from "./services/util/SubroutineUtils";
+import { CompileTaskProvider } from "./task/providers/CompileTaskProvider";
+import SpoolContentProvider from "./task/providers/SpoolContentProvider";
+import TerminalLinkProvider from "./task/providers/TerminalLinkProvider";
 
-let copyBooksDownloader: CopybookDownloadService;
-let middleware: Middleware;
-let languageClientService: LanguageClientService;
-
+export const taskType = "cobolCompileJob";
 function initialize() {
     // We need lazy initialization to be able to mock this for unit testing
-    copyBooksDownloader = new CopybookDownloadService();
-    middleware = new Middleware(copyBooksDownloader);
-    languageClientService = new LanguageClientService(middleware);
+    const copyBooksDownloader = new CopybookDownloadService();
+    const middleware = new Middleware(copyBooksDownloader);
+    const languageClientService = new LanguageClientService(middleware);
+
+    return {copyBooksDownloader, languageClientService};
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-    initialize();
+    const {copyBooksDownloader, languageClientService} = initialize();
     initSmartTab(context);
 
     TelemetryService.registerEvent("log", ["bootstrap", "experiment-tag"], "Extension activation event was triggered");
@@ -58,9 +60,14 @@ export async function activate(context: vscode.ExtensionContext) {
         () => {
         gotoCopybookSettings();
     }));
-    context.subscriptions.push(vscode.commands.registerCommand("cobol-lsp.commentLine.toggle", () => { commentCommand(CommentAction.TOGGLE) }));
-    context.subscriptions.push(vscode.commands.registerCommand("cobol-lsp.commentLine.comment", () => { commentCommand(CommentAction.COMMENT) }));
-    context.subscriptions.push(vscode.commands.registerCommand("cobol-lsp.commentLine.uncomment", () => { commentCommand(CommentAction.UNCOMMENT) }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("cobol-lsp.commentLine.toggle", () => { commentCommand(CommentAction.TOGGLE); }));
+    context.subscriptions.push(vscode.commands.registerCommand("cobol-lsp.commentLine.comment", () => { commentCommand(CommentAction.COMMENT); }));
+    context.subscriptions.push(vscode.commands.registerCommand("cobol-lsp.commentLine.uncomment", () => { commentCommand(CommentAction.UNCOMMENT); }));
+
+    // task provider
+    registerTask(context);
+
     // create .gitignore file within .c4z folder
     createFileWithGivenPath(C4Z_FOLDER, GITIGNORE_FILE, "/**");
 
@@ -96,7 +103,16 @@ export async function activate(context: vscode.ExtensionContext) {
         },
     };
 }
+function registerTask(context: vscode.ExtensionContext) {
 
-export function deactivate() {
-    return Promise.resolve(languageClientService.stop());
+    const taskProvider = new CompileTaskProvider();
+
+    // register task
+    context.subscriptions.push(vscode.tasks.registerTaskProvider(taskType, taskProvider));
+
+    // register terminal link provider
+    vscode.window.registerTerminalLinkProvider(new TerminalLinkProvider(taskProvider));
+
+    // register registerTextDocumentContentProvider
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(SpoolContentProvider.scheme, new SpoolContentProvider()));
 }
