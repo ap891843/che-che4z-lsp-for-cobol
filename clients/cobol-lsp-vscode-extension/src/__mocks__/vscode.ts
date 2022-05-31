@@ -23,6 +23,11 @@ export namespace window {
     export let showErrorMessage = () => {};
     export let showInformationMessage = () => {};
     export let createStatusBarItem = () => { return { show: () => { } } };
+    export let activeTextEditor= {document: {}};
+}
+
+export namespace TaskScope {
+    export const Workspace = 2;
 }
 export enum StatusBarAlignment {
     Right,
@@ -55,6 +60,30 @@ export enum EndOfLine {
 
 export const Range = jest.fn().mockImplementation((start, end) => { return {start: start, end: end} })
 export const Position = jest.fn().mockImplementation((line, character) => { return {line: line, character: character} });
+
+export interface TaskProvider {
+    provideTasks(token: any): any;
+    resolveTask(task: any, token: any): any;
+}
+export class CompletionItem {}
+export class CodeLens { }
+export class DocumentLink { }
+export class TreeItem { }
+export class CustomExecution {
+    // @ts-ignore
+    constructor(callback: (resolvedDefinition: any) => Thenable<any>);
+}
+
+export class Task {
+    // @ts-ignore
+    constructor(taskDefinition: any, scope: any, name: string, source: string, execution?: any,
+                problemMatchers?: string | string[]);
+}
+export class EventEmitter {
+    event: any;
+    fire = (data: any) => {};
+    dispose=()=> {};
+}
 
 export const commands = {
     registerTextEditorCommand: jest.fn()
