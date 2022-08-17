@@ -122,9 +122,6 @@ jobs:
       - name: postinstall
         run: npm run postinstall
         working-directory: clients/cobol-lsp-vscode-extension
-      - name: coverage
-        run: npm run coverage
-        working-directory: clients/cobol-lsp-vscode-extension
       - name: configure server
         working-directory: clients/cobol-lsp-vscode-extension
         run: "cp -R ../../staging/. ./server/"
