@@ -1,0 +1,41 @@
+load("@rules_jvm_external//:defs.bzl", "maven_install", "artifact")
+
+java_library(
+    name = "parser",
+    srcs = glob(["src/main/java/**/*.java"]),
+    deps = [
+        artifact("com.google.guava:guava"),
+        "//:lombok"
+    ]
+)
+
+java_import(
+    name = "antlr_jar",
+    jars = ["antlr-4.13.1-complete.jar"],
+)
+
+genrule(
+    name = "antlr_gen",
+    srcs = glob(["src/main/antlr4/org/eclipse/lsp/cobol/core/parser/*.g4"]),
+    tools = [":antlr_jar"],
+    cmd = "java -Xmx500M -cp $(location :antlr_jar) org.antlr.v4.Tool -Dlanguage=Go -no-visitor -package parsing  $(SRCS)",
+    outs = ["hello_lexer.go"],
+)
+
+java_plugin(
+    name = "lombok_plugin",
+    generates_api = True,
+    processor_class = "lombok.launch.AnnotationProcessorHider$AnnotationProcessor",
+    deps = ["@maven//:org_projectlombok_lombok"],
+)
+
+java_library(
+    name = "lombok",
+    exported_plugins = [
+        ":lombok_plugin",
+    ],
+    visibility = ["//visibility:public"],
+    exports = [
+        "@maven//:org_projectlombok_lombok",
+    ],
+)
