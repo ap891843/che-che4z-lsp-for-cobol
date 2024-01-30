@@ -1,25 +1,36 @@
 load("@rules_jvm_external//:defs.bzl", "maven_install", "artifact")
+load("@rules_java//java:defs.bzl", "java_library", "java_import")
 
 java_library(
     name = "parser",
     srcs = glob(["src/main/java/**/*.java"]),
+    resources = [
+        	"//:antlr_gen"
+        ],
     deps = [
         artifact("com.google.guava:guava"),
+        artifact("org.antlr:antlr4"),
+        artifact("org.antlr:antlr4-runtime"),
         "//:lombok"
     ]
 )
 
 java_import(
     name = "antlr_jar",
-    jars = ["antlr-4.13.1-complete.jar"],
+    jars = ["@maven//:org/antlr/antlr4/4.7.1/antlr4-4.7.1.jar",
+            "@maven//:org/antlr/antlr4-runtime/4.7.1/antlr4-runtime-4.7.1.jar",
+            "@maven//:org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar",
+            "@maven//:org/antlr/ST4/4.0.8/ST4-4.0.8.jar",
+            "@maven//:org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar",
+            "@maven//:org/antlr/stringtemplate/4.0.2/stringtemplate-4.0.2.jar"],
 )
 
 genrule(
     name = "antlr_gen",
     srcs = glob(["src/main/antlr4/org/eclipse/lsp/cobol/core/parser/*.g4"]),
     tools = [":antlr_jar"],
-    cmd = "java -Xmx500M -cp $(location :antlr_jar) org.antlr.v4.Tool -Dlanguage=Go -no-visitor -package parsing  $(SRCS)",
-    outs = ["hello_lexer.go"],
+    cmd = "java -Xmx500M -cp $(locations :antlr_jar) org.antlr.v4.Tool -Dlanguage=Java -visitor -package org.eclipse.lsp.cobol.core -o target/generated-sources/antlr4/org/eclipse/lsp/cobol/core $(SRCS)",
+    outs = ["target/generated-sources/antlr4/org/eclipse/lsp/cobol/core $(SRCS)"]
 )
 
 java_plugin(
