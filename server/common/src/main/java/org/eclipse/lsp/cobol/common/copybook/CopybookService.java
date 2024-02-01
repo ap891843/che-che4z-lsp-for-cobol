@@ -14,17 +14,16 @@
  */
 package org.eclipse.lsp.cobol.common.copybook;
 
+import java.util.Collection;
 import lombok.NonNull;
 import org.eclipse.lsp.cobol.common.ResultWithErrors;
-
-import java.util.Collection;
 
 /**
  * Provide API definition to search for copybooks files. The service also caches copybook to reduce
  * filesystem load.
  */
 public interface CopybookService {
-  String FILE_BASENAME_VARIABLE = "${fileBasenameNoExtension}";
+  String FILE_BASENAME_VARIABLE = "\\$\\{fileBasenameNoExtension\\}";
   /** Remove all the stored copybook. */
   void invalidateCache();
 

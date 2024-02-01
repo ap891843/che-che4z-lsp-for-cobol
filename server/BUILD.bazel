@@ -1,42 +1,11 @@
 load("@rules_jvm_external//:defs.bzl", "maven_install", "artifact")
+load("@rules_java//java:defs.bzl", "java_library", "java_import")
 
-
-java_binary(
-    name = "server1",
-    srcs = glob(["engine/src/main/java/**/*.java"]),
-    main_class = "engine/src/main/java/org/eclipse/lsp/cobol/LangServerBootstrap",
-    deps = [
-        ":common",
-        ":lombok"
-    ]
-)
-
-java_library(
-    name = "common",
-    srcs = ["//common"],
-    visibility = ["//visibility:public"],
-)
+package(default_visibility = ["//visibility:public"])
 
 #java_library(
-#    name = "engine",
-#    srcs = ["//engine"],
-#    visibility = ["//visibility:public"],
+#    name = "server",
+#    srcs = [
+#        "//engine",
+#    ]
 #)
-
-java_plugin(
-    name = "lombok_plugin",
-    generates_api = True,
-    processor_class = "lombok.launch.AnnotationProcessorHider$AnnotationProcessor",
-    deps = ["@maven//:org_projectlombok_lombok"],
-)
-
-java_library(
-    name = "lombok",
-    exported_plugins = [
-        ":lombok_plugin",
-    ],
-    visibility = ["//visibility:public"],
-    exports = [
-        "@maven//:org_projectlombok_lombok",
-    ],
-)

@@ -15,7 +15,20 @@
 
 package org.eclipse.lsp.cobol.core.visitor;
 
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static org.antlr.v4.runtime.Lexer.HIDDEN;
+import static org.eclipse.lsp.cobol.common.OutlineNodeNames.FILLER_NAME;
+import static org.eclipse.lsp.cobol.common.VariableConstants.*;
+import static org.eclipse.lsp.cobol.core.CobolParser.*;
+import static org.eclipse.lsp.cobol.core.visitor.VisitorHelper.*;
+
 import com.google.common.collect.ImmutableList;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +40,7 @@ import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.lsp.cobol.common.SubroutineService;
 import org.eclipse.lsp.cobol.common.dialects.CobolDialect;
 import org.eclipse.lsp.cobol.common.error.ErrorSeverity;
 import org.eclipse.lsp.cobol.common.error.ErrorSource;
@@ -34,38 +48,23 @@ import org.eclipse.lsp.cobol.common.error.SyntaxError;
 import org.eclipse.lsp.cobol.common.mapping.ExtendedDocument;
 import org.eclipse.lsp.cobol.common.message.MessageService;
 import org.eclipse.lsp.cobol.common.model.*;
+import org.eclipse.lsp.cobol.common.model.SectionType;
 import org.eclipse.lsp.cobol.common.model.tree.*;
-import org.eclipse.lsp.cobol.common.model.tree.variable.*;
-import org.eclipse.lsp.cobol.common.utils.StringUtils;
-import org.eclipse.lsp.cobol.core.CobolParser;
-import org.eclipse.lsp.cobol.core.CobolParserBaseVisitor;
 import org.eclipse.lsp.cobol.common.model.tree.statements.SetToBooleanStatement;
 import org.eclipse.lsp.cobol.common.model.tree.statements.SetToOnOffStatement;
 import org.eclipse.lsp.cobol.common.model.tree.statements.SetUpDownByStatement;
+import org.eclipse.lsp.cobol.common.model.tree.variable.*;
 import org.eclipse.lsp.cobol.common.model.tree.variable.VariableDefinitionNode.Builder;
 import org.eclipse.lsp.cobol.common.model.variables.DivisionType;
-import org.eclipse.lsp.cobol.common.model.SectionType;
 import org.eclipse.lsp.cobol.common.utils.ImplicitCodeUtils;
+import org.eclipse.lsp.cobol.common.utils.StringUtils;
+import org.eclipse.lsp.cobol.core.CobolParser;
+import org.eclipse.lsp.cobol.core.CobolParserBaseVisitor;
 import org.eclipse.lsp.cobol.core.semantics.CopybooksRepository;
 import org.eclipse.lsp.cobol.service.settings.CachingConfigurationService;
-import org.eclipse.lsp.cobol.common.SubroutineService;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
-
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-import static org.antlr.v4.runtime.Lexer.HIDDEN;
-import static org.eclipse.lsp.cobol.common.VariableConstants.*;
-import static org.eclipse.lsp.cobol.core.CobolParser.*;
-import static org.eclipse.lsp.cobol.common.OutlineNodeNames.FILLER_NAME;
-import static org.eclipse.lsp.cobol.core.visitor.VisitorHelper.*;
 
 /**
  * This extension of {@link CobolParserBaseVisitor} applies the semantic analysis based on the
@@ -622,10 +621,20 @@ public class CobolVisitor extends CobolParserBaseVisitor<List<Node>> {
 
   @Override
   public List<Node> visitDeleteStatement(DeleteStatementContext ctx) {
-    VariableNameAndLocality fileNameLocality =
-            new VariableNameAndLocality(ctx.deleteFilenameClause().fileName().getText().toUpperCase(),
-                    retrieveLocality(ctx.deleteFilenameClause().fileName()).orElseGet(null));
-    return addTreeNode(ctx, locality -> new FileOperationStatementNode(locality, fileNameLocality, NodeType.DELETE_STATEMENT));
+    Optional<Locality> locality1 = retrieveLocality(ctx.deleteFilenameClause().fileName());
+    if (locality1.isPresent()) {
+      VariableNameAndLocality fileNameLocality =
+          new VariableNameAndLocality(
+              ctx.deleteFilenameClause().fileName().getText().toUpperCase(),
+              locality1.get());
+      return addTreeNode(
+          ctx,
+          locality ->
+              new FileOperationStatementNode(
+                  locality, fileNameLocality, NodeType.DELETE_STATEMENT));
+    } else {
+      return super.visitChildren(ctx);
+    }
   }
 
   @Override

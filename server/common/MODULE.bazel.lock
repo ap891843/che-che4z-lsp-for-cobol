@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 3,
-  "moduleFileHash": "9ac23789d3cc69c360cc53fe002f2257698e2b5ce5975a0bf5d6dfb3c6bce527",
+  "moduleFileHash": "1e5d7734465b42b9df806a222df7fefd1cc596117d10c358187e7e5909f75155",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -17,10 +17,10 @@
   },
   "moduleDepGraph": {
     "<root>": {
-      "name": "",
-      "version": "",
+      "name": "common",
+      "version": "1.0-SNAPSHOT",
       "key": "<root>",
-      "repoName": "",
+      "repoName": "common",
       "executionPlatformsToRegister": [],
       "toolchainsToRegister": [],
       "extensionUsages": [
@@ -30,7 +30,7 @@
           "usingModule": "<root>",
           "location": {
             "file": "@@//:MODULE.bazel",
-            "line": 2,
+            "line": 6,
             "column": 22
           },
           "imports": {
@@ -63,7 +63,7 @@
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 3,
+                "line": 7,
                 "column": 14
               }
             }
@@ -2036,7 +2036,7 @@
       "general": {
         "bzlTransitiveDigest": "vOkppYc6wE/3x4HnEmuAd/USfcKbaNTBbUEl7bKmhsY=",
         "accumulatedFileDigests": {
-          "@@//:maven_install.json": "d7e159f1c0049c647b0a5363841f486f71950ce37c3563f57700b8bbce3e3ff2",
+          "@@//:maven_install.json": "acfdeec3604784e83363aa4a65a2805227217e13532675b36c60615d4d4a41c8",
           "@@rules_jvm_external~6.0//:rules_jvm_external_deps_install.json": "cafb5d2d8119391eb2b322ce3840d3352ea82d496bdb8cbd4b6779ec4d044dda"
         },
         "envVariables": {},
