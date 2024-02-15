@@ -3,22 +3,21 @@ module(
     version = "1.0-SNAPSHOT",
 )
 bazel_dep(name = "rules_jvm_external", version = "6.0")
-maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 # Depend on module common at a local path.
 # The bazel_dep statement is necessary because the root module must have visibility on common.
 bazel_dep(name = "common", version="", dev_dependency = True)
-bazel_dep(name = "parser", version="", dev_dependency = True)
-
 local_path_override(
     module_name = "common",
     path = "../common",
 )
 
+bazel_dep(name = "parser", version="", dev_dependency = True)
 local_path_override(
     module_name = "parser",
     path = "../parser",
 )
 
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
     artifacts = [
         # This line is an example coordinate, you'd copy-paste your actual dependencies here
@@ -42,8 +41,7 @@ maven.install(
         "info.picocli:picocli:jar:4.7.5",
 #        "com.google.inject.extensions:guice-assistedinject:4.2.2"
     ],
-
-   lock_file = "//:maven_install.json",
+    lock_file = "//:maven_install.json",
 )
 maven.artifact(
     artifact = "antlr4",

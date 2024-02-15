@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 3,
-  "moduleFileHash": "1e5d7734465b42b9df806a222df7fefd1cc596117d10c358187e7e5909f75155",
+  "moduleFileHash": "7adf9290d5f60c58012ec22b66ed3fe148b3f446bd5f7bb55a635d53f2277299",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -13,14 +13,16 @@
     "compatibilityMode": "ERROR"
   },
   "localOverrideHashes": {
+    "common": "3847f117445130880ae901724d15a1436b8da8224ea9ad830002492f6dca4b62",
+    "parser": "a696f0b743ed8f62af42f878e5d24d98420e0b35f03cb6f0390f4d89846339de",
     "bazel_tools": "922ea6752dc9105de5af957f7a99a6933c0a6a712d23df6aad16a9c399f7e787"
   },
   "moduleDepGraph": {
     "<root>": {
-      "name": "common",
+      "name": "engine",
       "version": "1.0-SNAPSHOT",
       "key": "<root>",
-      "repoName": "common",
+      "repoName": "engine",
       "executionPlatformsToRegister": [],
       "toolchainsToRegister": [],
       "extensionUsages": [
@@ -30,7 +32,7 @@
           "usingModule": "<root>",
           "location": {
             "file": "@@//:MODULE.bazel",
-            "line": 6,
+            "line": 20,
             "column": 22
           },
           "imports": {
@@ -43,28 +45,46 @@
               "tagName": "install",
               "attributeValues": {
                 "artifacts": [
+                  "org.antlr:antlr4:4.7.1",
+                  "org.antlr:antlr4-runtime:4.7.1",
+                  "org.eclipse.lsp4j:org.eclipse.lsp4j:0.14.0",
                   "org.projectlombok:lombok:1.18.30",
                   "com.google.guava:guava:32.0.1-jre",
                   "com.google.code.gson:gson:2.8.9",
                   "ch.qos.logback:logback-classic:1.3.14",
-                  "org.eclipse.lsp4j:org.eclipse.lsp4j:0.14.0",
+                  "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.14.0",
+                  "com.google.inject:guice:4.2.2",
+                  "com.google.inject.extensions:guice-assistedinject:4.2.2",
+                  "com.google.guava:guava:32.0.1-jre",
                   "org.apache.commons:commons-lang3:3.12.0",
-                  "org.junit.jupiter:junit-jupiter-engine:5.6.0",
-                  "org.junit.jupiter:junit-jupiter-params:5.6.0",
-                  "org.junit.platform:junit-platform-runner:1.6.0",
-                  "org.mockito:mockito-core:4.6.1",
-                  "org.mockito:mockito-junit-jupiter:4.6.1",
-                  "com.google.code.findbugs:jsr305:3.0.2",
-                  "org.slf4j:slf4j-api:2.0.7",
-                  "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.14.0"
+                  "commons-io:commons-io:2.10.0",
+                  "org.apache.commons:commons-text:1.10.0",
+                  "org.slf4j:slf4j-api:2.0.9",
+                  "ch.qos.logback:logback-classic:1.3.14",
+                  "info.picocli:picocli:jar:4.7.5"
                 ],
                 "lock_file": "//:maven_install.json"
               },
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 7,
+                "line": 21,
                 "column": 14
+              }
+            },
+            {
+              "tagName": "artifact",
+              "attributeValues": {
+                "artifact": "antlr4",
+                "group": "org.antlr",
+                "version": "4.7.1",
+                "classifier": "complete"
+              },
+              "devDependency": false,
+              "location": {
+                "file": "@@//:MODULE.bazel",
+                "line": 46,
+                "column": 15
               }
             }
           ],
@@ -74,6 +94,8 @@
       ],
       "deps": {
         "rules_jvm_external": "rules_jvm_external@6.0",
+        "common": "common@_",
+        "parser": "parser@_",
         "bazel_tools": "bazel_tools@_",
         "local_config_platform": "local_config_platform@_"
       }
@@ -398,6 +420,134 @@
           },
           "remote_patch_strip": 0
         }
+      }
+    },
+    "common@_": {
+      "name": "common",
+      "version": "1.0-SNAPSHOT",
+      "key": "common@_",
+      "repoName": "common",
+      "executionPlatformsToRegister": [],
+      "toolchainsToRegister": [],
+      "extensionUsages": [
+        {
+          "extensionBzlFile": "@rules_jvm_external//:extensions.bzl",
+          "extensionName": "maven",
+          "usingModule": "common@_",
+          "location": {
+            "file": "@@common~override//:MODULE.bazel",
+            "line": 6,
+            "column": 22
+          },
+          "imports": {
+            "maven": "maven"
+          },
+          "devImports": [],
+          "tags": [
+            {
+              "tagName": "install",
+              "attributeValues": {
+                "artifacts": [
+                  "org.projectlombok:lombok:1.18.30",
+                  "com.google.guava:guava:32.0.1-jre",
+                  "com.google.code.gson:gson:2.8.9",
+                  "ch.qos.logback:logback-classic:1.3.14",
+                  "org.eclipse.lsp4j:org.eclipse.lsp4j:0.14.0",
+                  "org.apache.commons:commons-lang3:3.12.0",
+                  "org.junit.jupiter:junit-jupiter-engine:5.6.0",
+                  "org.junit.jupiter:junit-jupiter-params:5.6.0",
+                  "org.junit.platform:junit-platform-runner:1.6.0",
+                  "org.mockito:mockito-core:4.6.1",
+                  "org.mockito:mockito-junit-jupiter:4.6.1",
+                  "com.google.code.findbugs:jsr305:3.0.2",
+                  "org.slf4j:slf4j-api:2.0.7",
+                  "org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.14.0"
+                ]
+              },
+              "devDependency": false,
+              "location": {
+                "file": "@@common~override//:MODULE.bazel",
+                "line": 7,
+                "column": 14
+              }
+            }
+          ],
+          "hasDevUseExtension": false,
+          "hasNonDevUseExtension": true
+        }
+      ],
+      "deps": {
+        "rules_jvm_external": "rules_jvm_external@6.0",
+        "bazel_tools": "bazel_tools@_",
+        "local_config_platform": "local_config_platform@_"
+      }
+    },
+    "parser@_": {
+      "name": "parser",
+      "version": "1.0-SNAPSHOT",
+      "key": "parser@_",
+      "repoName": "parser",
+      "executionPlatformsToRegister": [],
+      "toolchainsToRegister": [],
+      "extensionUsages": [
+        {
+          "extensionBzlFile": "@rules_jvm_external//:extensions.bzl",
+          "extensionName": "maven",
+          "usingModule": "parser@_",
+          "location": {
+            "file": "@@parser~override//:MODULE.bazel",
+            "line": 13,
+            "column": 22
+          },
+          "imports": {
+            "maven": "maven"
+          },
+          "devImports": [],
+          "tags": [
+            {
+              "tagName": "install",
+              "attributeValues": {
+                "artifacts": [
+                  "org.antlr:antlr4:4.7.1",
+                  "org.antlr:antlr4-runtime:4.7.1",
+                  "com.google.guava:guava:32.0.1-jre",
+                  "org.projectlombok:lombok:1.18.30",
+                  "org.antlr:stringtemplate:4.0.2"
+                ]
+              },
+              "devDependency": false,
+              "location": {
+                "file": "@@parser~override//:MODULE.bazel",
+                "line": 15,
+                "column": 14
+              }
+            },
+            {
+              "tagName": "artifact",
+              "attributeValues": {
+                "artifact": "antlr4",
+                "group": "org.antlr",
+                "version": "4.7.1",
+                "classifier": "complete"
+              },
+              "devDependency": false,
+              "location": {
+                "file": "@@parser~override//:MODULE.bazel",
+                "line": 26,
+                "column": 15
+              }
+            }
+          ],
+          "hasDevUseExtension": false,
+          "hasNonDevUseExtension": true
+        }
+      ],
+      "deps": {
+        "rules_jvm_external": "rules_jvm_external@6.0",
+        "common": "common@_",
+        "rules_cc": "rules_cc@0.0.9",
+        "bazel_tools": "bazel_tools@_",
+        "local_config_platform": "local_config_platform@_"
       }
     },
     "bazel_tools@_": {
@@ -2036,7 +2186,7 @@
       "general": {
         "bzlTransitiveDigest": "vOkppYc6wE/3x4HnEmuAd/USfcKbaNTBbUEl7bKmhsY=",
         "accumulatedFileDigests": {
-          "@@//:maven_install.json": "d7e159f1c0049c647b0a5363841f486f71950ce37c3563f57700b8bbce3e3ff2",
+          "@@//:maven_install.json": "3f79c72b20d1000b0d7f94018a4b67d2d708c2d1cdc2237e133b180e0cb39a58",
           "@@rules_jvm_external~6.0//:rules_jvm_external_deps_install.json": "cafb5d2d8119391eb2b322ce3840d3352ea82d496bdb8cbd4b6779ec4d044dda"
         },
         "envVariables": {},
@@ -2137,6 +2287,18 @@
               "downloaded_file_path": "v1/io/grpc/grpc-context/1.56.1/grpc-context-1.56.1.jar"
             }
           },
+          "org_abego_treelayout_org_abego_treelayout_core_1_0_3": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_abego_treelayout_org_abego_treelayout_core_1_0_3",
+              "sha256": "fa5e31395c39c2e7d46aca0f81f72060931607b2fa41bd36038eb2cb6fb93326",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/abego/treelayout/org.abego.treelayout.core/1.0.3/org.abego.treelayout.core-1.0.3.jar"
+              ],
+              "downloaded_file_path": "v1/org/abego/treelayout/org.abego.treelayout.core/1.0.3/org.abego.treelayout.core-1.0.3.jar"
+            }
+          },
           "software_amazon_awssdk_endpoints_spi_2_20_128": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -2171,6 +2333,18 @@
                 "https://repo1.maven.org/maven2/org/objenesis/objenesis/3.2/objenesis-3.2.jar"
               ],
               "downloaded_file_path": "v1/org/objenesis/objenesis/3.2/objenesis-3.2.jar"
+            }
+          },
+          "info_picocli_picocli_4_7_5": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~info_picocli_picocli_4_7_5",
+              "sha256": "e83a906fb99b57091d1d68ac11f7c3d2518bd7a81a9c71b259e2c00d1564c8e8",
+              "urls": [
+                "https://repo1.maven.org/maven2/info/picocli/picocli/4.7.5/picocli-4.7.5.jar"
+              ],
+              "downloaded_file_path": "v1/info/picocli/picocli/4.7.5/picocli-4.7.5.jar"
             }
           },
           "org_mockito_mockito_junit_jupiter_4_6_1": {
@@ -2219,6 +2393,18 @@
                 "https://repo1.maven.org/maven2/org/apache/maven/maven-artifact/3.9.4/maven-artifact-3.9.4.jar"
               ],
               "downloaded_file_path": "v1/org/apache/maven/maven-artifact/3.9.4/maven-artifact-3.9.4.jar"
+            }
+          },
+          "org_apache_commons_commons_text_1_10_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_apache_commons_commons_text_1_10_0",
+              "sha256": "770cd903fa7b604d1f7ef7ba17f84108667294b2b478be8ed1af3bffb4ae0018",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/apache/commons/commons-text/1.10.0/commons-text-1.10.0.jar"
+              ],
+              "downloaded_file_path": "v1/org/apache/commons/commons-text/1.10.0/commons-text-1.10.0.jar"
             }
           },
           "software_amazon_awssdk_metrics_spi_2_20_128": {
@@ -2279,6 +2465,18 @@
                 "https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations/1.23/animal-sniffer-annotations-1.23.jar"
               ],
               "downloaded_file_path": "v1/org/codehaus/mojo/animal-sniffer-annotations/1.23/animal-sniffer-annotations-1.23.jar"
+            }
+          },
+          "org_antlr_antlr4_runtime_4_7_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_antlr_antlr4_runtime_4_7_1",
+              "sha256": "43516d19beae35909e04d06af6c0c58c17bc94e0070c85e8dc9929ca640dc91d",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/antlr/antlr4-runtime/4.7.1/antlr4-runtime-4.7.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/antlr/antlr4-runtime/4.7.1/antlr4-runtime-4.7.1.jar"
             }
           },
           "net_bytebuddy_byte_buddy_1_12_10": {
@@ -2610,6 +2808,24 @@
                 "{ \"repo_url\": \"https://repo1.maven.org/maven2\" }"
               ],
               "artifacts": [
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\", \"classifier\": \"complete\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4-runtime\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j\", \"version\": \"0.14.0\" }",
+                "{ \"group\": \"org.projectlombok\", \"artifact\": \"lombok\", \"version\": \"1.18.30\" }",
+                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
+                "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
+                "{ \"group\": \"ch.qos.logback\", \"artifact\": \"logback-classic\", \"version\": \"1.3.14\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.14.0\" }",
+                "{ \"group\": \"com.google.inject\", \"artifact\": \"guice\", \"version\": \"4.2.2\" }",
+                "{ \"group\": \"com.google.inject.extensions\", \"artifact\": \"guice-assistedinject\", \"version\": \"4.2.2\" }",
+                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
+                "{ \"group\": \"org.apache.commons\", \"artifact\": \"commons-lang3\", \"version\": \"3.12.0\" }",
+                "{ \"group\": \"commons-io\", \"artifact\": \"commons-io\", \"version\": \"2.10.0\" }",
+                "{ \"group\": \"org.apache.commons\", \"artifact\": \"commons-text\", \"version\": \"1.10.0\" }",
+                "{ \"group\": \"org.slf4j\", \"artifact\": \"slf4j-api\", \"version\": \"2.0.9\" }",
+                "{ \"group\": \"ch.qos.logback\", \"artifact\": \"logback-classic\", \"version\": \"1.3.14\" }",
+                "{ \"group\": \"info.picocli\", \"artifact\": \"picocli\", \"version\": \"4.7.5\", \"packaging\": \"jar\" }",
                 "{ \"group\": \"org.projectlombok\", \"artifact\": \"lombok\", \"version\": \"1.18.30\" }",
                 "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
                 "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
@@ -2624,6 +2840,12 @@
                 "{ \"group\": \"com.google.code.findbugs\", \"artifact\": \"jsr305\", \"version\": \"3.0.2\" }",
                 "{ \"group\": \"org.slf4j\", \"artifact\": \"slf4j-api\", \"version\": \"2.0.7\" }",
                 "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.14.0\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\", \"classifier\": \"complete\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4-runtime\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
+                "{ \"group\": \"org.projectlombok\", \"artifact\": \"lombok\", \"version\": \"1.18.30\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"stringtemplate\", \"version\": \"4.0.2\" }",
                 "{ \"group\": \"com.google.code.findbugs\", \"artifact\": \"jsr305\", \"version\": \"3.0.2\" }",
                 "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
                 "{ \"group\": \"com.google.errorprone\", \"artifact\": \"error_prone_annotations\", \"version\": \"2.3.2\" }",
@@ -2989,6 +3211,18 @@
               "downloaded_file_path": "v1/org/threeten/threetenbp/1.6.8/threetenbp-1.6.8.jar"
             }
           },
+          "org_antlr_ST4_4_0_8": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_antlr_ST4_4_0_8",
+              "sha256": "58caabc40c9f74b0b5993fd868e0f64a50c0759094e6a251aaafad98edfc7a3b",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/antlr/ST4/4.0.8/ST4-4.0.8.jar"
+              ],
+              "downloaded_file_path": "v1/org/antlr/ST4/4.0.8/ST4-4.0.8.jar"
+            }
+          },
           "io_opencensus_opencensus_proto_0_2_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3011,6 +3245,18 @@
                 "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar"
               ],
               "downloaded_file_path": "v1/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar"
+            }
+          },
+          "org_glassfish_javax_json_1_0_4": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_glassfish_javax_json_1_0_4",
+              "sha256": "0e1dec40a1ede965941251eda968aeee052cc4f50378bc316cc48e8159bdbeb4",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar"
+              ],
+              "downloaded_file_path": "v1/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar"
             }
           },
           "commons_logging_commons_logging_1_2": {
@@ -3059,6 +3305,18 @@
                 "https://repo1.maven.org/maven2/io/netty/netty-codec/4.1.94.Final/netty-codec-4.1.94.Final.jar"
               ],
               "downloaded_file_path": "v1/io/netty/netty-codec/4.1.94.Final/netty-codec-4.1.94.Final.jar"
+            }
+          },
+          "org_antlr_antlr_runtime_3_5_2": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_antlr_antlr_runtime_3_5_2",
+              "sha256": "ce3fc8ecb10f39e9a3cddcbb2ce350d272d9cd3d0b1e18e6fe73c3b9389c8734",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar"
+              ],
+              "downloaded_file_path": "v1/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar"
             }
           },
           "software_amazon_awssdk_profiles_2_20_128": {
@@ -3131,6 +3389,18 @@
                 "https://repo1.maven.org/maven2/ch/qos/logback/logback-classic/1.3.14/logback-classic-1.3.14.jar"
               ],
               "downloaded_file_path": "v1/ch/qos/logback/logback-classic/1.3.14/logback-classic-1.3.14.jar"
+            }
+          },
+          "com_google_inject_guice_4_2_2": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~com_google_inject_guice_4_2_2",
+              "sha256": "d258ff1bd9b8b527872f8402648226658ad3149f1f40e74b0566d69e7e042fbc",
+              "urls": [
+                "https://repo1.maven.org/maven2/com/google/inject/guice/4.2.2/guice-4.2.2.jar"
+              ],
+              "downloaded_file_path": "v1/com/google/inject/guice/4.2.2/guice-4.2.2.jar"
             }
           },
           "com_google_http_client_google_http_client_apache_v2_1_43_3": {
@@ -3289,6 +3559,24 @@
                 "{ \"repo_url\": \"https://repo1.maven.org/maven2\" }"
               ],
               "artifacts": [
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\", \"classifier\": \"complete\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4-runtime\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j\", \"version\": \"0.14.0\" }",
+                "{ \"group\": \"org.projectlombok\", \"artifact\": \"lombok\", \"version\": \"1.18.30\" }",
+                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
+                "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
+                "{ \"group\": \"ch.qos.logback\", \"artifact\": \"logback-classic\", \"version\": \"1.3.14\" }",
+                "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.14.0\" }",
+                "{ \"group\": \"com.google.inject\", \"artifact\": \"guice\", \"version\": \"4.2.2\" }",
+                "{ \"group\": \"com.google.inject.extensions\", \"artifact\": \"guice-assistedinject\", \"version\": \"4.2.2\" }",
+                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
+                "{ \"group\": \"org.apache.commons\", \"artifact\": \"commons-lang3\", \"version\": \"3.12.0\" }",
+                "{ \"group\": \"commons-io\", \"artifact\": \"commons-io\", \"version\": \"2.10.0\" }",
+                "{ \"group\": \"org.apache.commons\", \"artifact\": \"commons-text\", \"version\": \"1.10.0\" }",
+                "{ \"group\": \"org.slf4j\", \"artifact\": \"slf4j-api\", \"version\": \"2.0.9\" }",
+                "{ \"group\": \"ch.qos.logback\", \"artifact\": \"logback-classic\", \"version\": \"1.3.14\" }",
+                "{ \"group\": \"info.picocli\", \"artifact\": \"picocli\", \"version\": \"4.7.5\", \"packaging\": \"jar\" }",
                 "{ \"group\": \"org.projectlombok\", \"artifact\": \"lombok\", \"version\": \"1.18.30\" }",
                 "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
                 "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
@@ -3303,6 +3591,12 @@
                 "{ \"group\": \"com.google.code.findbugs\", \"artifact\": \"jsr305\", \"version\": \"3.0.2\" }",
                 "{ \"group\": \"org.slf4j\", \"artifact\": \"slf4j-api\", \"version\": \"2.0.7\" }",
                 "{ \"group\": \"org.eclipse.lsp4j\", \"artifact\": \"org.eclipse.lsp4j.jsonrpc\", \"version\": \"0.14.0\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\", \"classifier\": \"complete\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"antlr4-runtime\", \"version\": \"4.7.1\" }",
+                "{ \"group\": \"com.google.guava\", \"artifact\": \"guava\", \"version\": \"32.0.1-jre\" }",
+                "{ \"group\": \"org.projectlombok\", \"artifact\": \"lombok\", \"version\": \"1.18.30\" }",
+                "{ \"group\": \"org.antlr\", \"artifact\": \"stringtemplate\", \"version\": \"4.0.2\" }",
                 "{ \"group\": \"com.google.code.findbugs\", \"artifact\": \"jsr305\", \"version\": \"3.0.2\" }",
                 "{ \"group\": \"com.google.code.gson\", \"artifact\": \"gson\", \"version\": \"2.8.9\" }",
                 "{ \"group\": \"com.google.errorprone\", \"artifact\": \"error_prone_annotations\", \"version\": \"2.3.2\" }",
@@ -3365,6 +3659,18 @@
                 "https://repo1.maven.org/maven2/com/google/auto/value/auto-value-annotations/1.7.4/auto-value-annotations-1.7.4.jar"
               ],
               "downloaded_file_path": "v1/com/google/auto/value/auto-value-annotations/1.7.4/auto-value-annotations-1.7.4.jar"
+            }
+          },
+          "aopalliance_aopalliance_1_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~aopalliance_aopalliance_1_0",
+              "sha256": "0addec670fedcd3f113c5c8091d783280d23f75e3acb841b61a9cdb079376a08",
+              "urls": [
+                "https://repo1.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar"
+              ],
+              "downloaded_file_path": "v1/aopalliance/aopalliance/1.0/aopalliance-1.0.jar"
             }
           },
           "junit_junit_4_13_2": {
@@ -3439,6 +3745,18 @@
               "downloaded_file_path": "v1/com/google/api/grpc/proto-google-cloud-storage-v2/2.26.1-alpha/proto-google-cloud-storage-v2-2.26.1-alpha.jar"
             }
           },
+          "org_antlr_antlr4_4_7_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_antlr_antlr4_4_7_1",
+              "sha256": "a2cdc2f2f8eb893728832568dc54d080eb5a1495edb3b66e51b97122a60a0d87",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/antlr/antlr4/4.7.1/antlr4-4.7.1.jar"
+              ],
+              "downloaded_file_path": "v1/org/antlr/antlr4/4.7.1/antlr4-4.7.1.jar"
+            }
+          },
           "com_google_guava_guava_testlib_31_1_jre": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3461,6 +3779,30 @@
                 "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar"
               ],
               "downloaded_file_path": "v1/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar"
+            }
+          },
+          "commons_io_commons_io_2_10_0": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~commons_io_commons_io_2_10_0",
+              "sha256": "15093cffda2a0c65783c1d371de55548303cc158df94a66fc6cd15d25c3e2ef8",
+              "urls": [
+                "https://repo1.maven.org/maven2/commons-io/commons-io/2.10.0/commons-io-2.10.0.jar"
+              ],
+              "downloaded_file_path": "v1/commons-io/commons-io/2.10.0/commons-io-2.10.0.jar"
+            }
+          },
+          "org_antlr_antlr4_jar_complete_4_7_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_antlr_antlr4_jar_complete_4_7_1",
+              "sha256": "f41dce7441d523baf9769cb7756a00f27a4b67e55aacab44525541f62d7f6688",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/antlr/antlr4/4.7.1/antlr4-4.7.1-complete.jar"
+              ],
+              "downloaded_file_path": "v1/org/antlr/antlr4/4.7.1/antlr4-4.7.1-complete.jar"
             }
           },
           "org_hamcrest_hamcrest_core_1_3": {
@@ -3536,6 +3878,18 @@
                 "https://repo1.maven.org/maven2/io/grpc/grpc-rls/1.56.1/grpc-rls-1.56.1.jar"
               ],
               "downloaded_file_path": "v1/io/grpc/grpc-rls/1.56.1/grpc-rls-1.56.1.jar"
+            }
+          },
+          "org_antlr_stringtemplate_4_0_2": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~org_antlr_stringtemplate_4_0_2",
+              "sha256": "8056d5586e1b18d3def6347b5d020a85722d850bb9f4d7a9aafe4f842c651ef9",
+              "urls": [
+                "https://repo1.maven.org/maven2/org/antlr/stringtemplate/4.0.2/stringtemplate-4.0.2.jar"
+              ],
+              "downloaded_file_path": "v1/org/antlr/stringtemplate/4.0.2/stringtemplate-4.0.2.jar"
             }
           },
           "io_netty_netty_transport_classes_epoll_4_1_94_Final": {
@@ -3646,16 +4000,16 @@
               "downloaded_file_path": "v1/org/eclipse/xtend/org.eclipse.xtend.lib/2.24.0/org.eclipse.xtend.lib-2.24.0.jar"
             }
           },
-          "org_slf4j_slf4j_api_2_0_7": {
+          "org_slf4j_slf4j_api_2_0_9": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
             "attributes": {
-              "name": "rules_jvm_external~6.0~maven~org_slf4j_slf4j_api_2_0_7",
-              "sha256": "5d6298b93a1905c32cda6478808ac14c2d4a47e91535e53c41f7feeb85d946f4",
+              "name": "rules_jvm_external~6.0~maven~org_slf4j_slf4j_api_2_0_9",
+              "sha256": "0818930dc8d7debb403204611691da58e49d42c50b6ffcfdce02dadb7c3c2b6c",
               "urls": [
-                "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar"
+                "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar"
               ],
-              "downloaded_file_path": "v1/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar"
+              "downloaded_file_path": "v1/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar"
             }
           },
           "com_google_cloud_google_cloud_core_http_2_22_0": {
@@ -3706,6 +4060,18 @@
               "downloaded_file_path": "v1/org/junit/platform/junit-platform-suite-api/1.6.0/junit-platform-suite-api-1.6.0.jar"
             }
           },
+          "com_google_inject_extensions_guice_assistedinject_4_2_2": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~com_google_inject_extensions_guice_assistedinject_4_2_2",
+              "sha256": "eec353f513d34b8b9e414b9d059687ef6c290aeb3c3df52e8943aeda0f013be8",
+              "urls": [
+                "https://repo1.maven.org/maven2/com/google/inject/extensions/guice-assistedinject/4.2.2/guice-assistedinject-4.2.2.jar"
+              ],
+              "downloaded_file_path": "v1/com/google/inject/extensions/guice-assistedinject/4.2.2/guice-assistedinject-4.2.2.jar"
+            }
+          },
           "org_eclipse_xtext_org_eclipse_xtext_xbase_lib_2_24_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3742,6 +4108,18 @@
               "downloaded_file_path": "v1/net/bytebuddy/byte-buddy-agent/1.12.10/byte-buddy-agent-1.12.10.jar"
             }
           },
+          "javax_inject_javax_inject_1": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~javax_inject_javax_inject_1",
+              "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff",
+              "urls": [
+                "https://repo1.maven.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar"
+              ],
+              "downloaded_file_path": "v1/javax/inject/javax.inject/1/javax.inject-1.jar"
+            }
+          },
           "org_junit_jupiter_junit_jupiter_params_5_6_0": {
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_file",
@@ -3776,6 +4154,18 @@
                 "https://repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar"
               ],
               "downloaded_file_path": "v1/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar"
+            }
+          },
+          "com_ibm_icu_icu4j_58_2": {
+            "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
+            "ruleClassName": "http_file",
+            "attributes": {
+              "name": "rules_jvm_external~6.0~maven~com_ibm_icu_icu4j_58_2",
+              "sha256": "953e1e83b2be7c3ea2f88da86c13614f47e9e71d3578c8521d7f187756b63962",
+              "urls": [
+                "https://repo1.maven.org/maven2/com/ibm/icu/icu4j/58.2/icu4j-58.2.jar"
+              ],
+              "downloaded_file_path": "v1/com/ibm/icu/icu4j/58.2/icu4j-58.2.jar"
             }
           },
           "com_google_android_annotations_4_1_1_4": {

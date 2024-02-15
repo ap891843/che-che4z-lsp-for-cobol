@@ -21,7 +21,7 @@ maven.install(
          "org.antlr:stringtemplate:4.0.2",
     ],
 
-   lock_file = "//:maven_install.json",
+#   lock_file = "//:maven_install.json",
 )
 maven.artifact(
     artifact = "antlr4",
@@ -29,4 +29,5 @@ maven.artifact(
     version = "4.7.1",
     classifier = "complete"
 )
-use_repo(maven, "maven", "unpinned_maven")
+#use_repo(maven, "maven", "unpinned_maven")
+use_repo(maven, "maven")
