@@ -2186,7 +2186,7 @@
       "general": {
         "bzlTransitiveDigest": "vOkppYc6wE/3x4HnEmuAd/USfcKbaNTBbUEl7bKmhsY=",
         "accumulatedFileDigests": {
-          "@@//:maven_install.json": "3f79c72b20d1000b0d7f94018a4b67d2d708c2d1cdc2237e133b180e0cb39a58",
+          "@@//:maven_install.json": "694f65a3aa420d0de0feeeee2232384b9a415a0be9f57daffd56825721ca173f",
           "@@rules_jvm_external~6.0//:rules_jvm_external_deps_install.json": "cafb5d2d8119391eb2b322ce3840d3352ea82d496bdb8cbd4b6779ec4d044dda"
         },
         "envVariables": {},
