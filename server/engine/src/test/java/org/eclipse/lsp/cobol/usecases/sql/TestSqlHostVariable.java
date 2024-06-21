@@ -52,6 +52,17 @@ public class TestSqlHostVariable {
           + "        PROCEDURE DIVISION.\n"
           + "         {_01 VAR-NAME USAGE IS SQL TYPE IS RESULT-SET-LOCATOR VARYING|1_}.";
 
+  public static final String TEXT5 =
+          "        Identification Division.\n"
+                  + "        Program-Id. 'TEST1'.\n"
+                  + "        Data Division.\n"
+                  + "         Working-Storage Section.\n"
+                  + "       01 {$*VAR-NAME1} USAGE IS SQL TYPE IS TABLE LIKE TABLENAME AS LOCATOR.\n"
+                  + "       01 {$*VAR-NAME2} USAGE SQL TYPE IS TABLE LIKE TABLENAME AS LOCATOR.\n"
+                  + "       01 {$*VAR-NAME3} SQL TYPE IS TABLE LIKE TABLENAME AS LOCATOR.\n"
+                  + "        PROCEDURE DIVISION.\n"
+                  + "           DISPLAY {$var-name1}..";
+
   @Test
   void testSupportForResultSetLocator() {
     UseCaseEngine.runTest(TEXT, ImmutableList.of(), ImmutableMap.of());
@@ -79,5 +90,10 @@ public class TestSqlHostVariable {
                 "this DB2 statement is allowed only in LINKAGE SECTION or WORKING-STORAGE SECTION",
                 DiagnosticSeverity.Error,
                 ErrorSource.DIALECT.getText())));
+  }
+
+  @Test
+  void testLobVariables() {
+    UseCaseEngine.runTest(TEXT5, ImmutableList.of(), ImmutableMap.of());
   }
 }

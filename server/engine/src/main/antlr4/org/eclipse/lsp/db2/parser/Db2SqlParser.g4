@@ -24,9 +24,15 @@ execRule: EXEC SQL sqlCode END_EXEC
          | {notifyError("cobolParser.missingEndExec");} EXEC SQL sqlCode DOT_FS? EOF
          | {notifyError("cobolParser.missingEndExec");} EXEC SQL;
 
-nonExecRule: result_set_locator_host_variable;
+nonExecRule: sql_host_variables;
 
-result_set_locator_host_variable: dbs_level_01 entry_name  (USAGE IS?)? SQL TYPE IS RESULT_SET_LOCATOR VARYING;
+sql_host_variables: dbs_level_01 entry_name  (USAGE IS?)? SQL TYPE IS (result_set_locator | tableLocators);
+result_set_locator : RESULT_SET_LOCATOR VARYING;
+
+tableLocators
+    : TABLE LIKE entry_name AS LOCATOR
+    ;
+
 entry_name : (FILLER |dbs_host_names);
 sqlCode
    : ~END_EXEC*?
