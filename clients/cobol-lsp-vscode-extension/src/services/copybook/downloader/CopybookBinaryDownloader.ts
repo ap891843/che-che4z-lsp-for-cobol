@@ -12,6 +12,7 @@
  *   Broadcom - initial API and implementation
  */
 import { PassThrough } from "stream";
+import * as path from "node:path";
 import { TAR_FOLDER } from "../../../constants";
 import { loadProfile } from "../../util/Utils";
 import * as vscode from "vscode";
@@ -44,12 +45,16 @@ export class CopybookBinaryDownloader {
   }
 
   private async downloadFileImpl(
-    path: string,
+    remotePath: string,
     profile: string,
     type: "USS" | "DSN",
   ): Promise<boolean> {
+    const remoteFilePath = path.posix.normalize(remotePath);
+    if (!path.posix.isAbsolute(remoteFilePath)) {
+      return false;
+    }
     const loadedProfile = loadProfile(profile, this.explorerAPI);
-    const tarUri = this.getTarFileUri(path);
+    const tarUri = this.getTarFileUri(remoteFilePath);
     try {
       const passThrough = new PassThrough();
       const chunks: Buffer[] = [];
@@ -59,17 +64,17 @@ export class CopybookBinaryDownloader {
       });
 
       if (type == "DSN") {
-        await this.explorerAPI.getMvsApi(loadedProfile).getContents(path, {
-          returnEtag: true,
-          binary: true,
-          stream: passThrough,
-        });
+        await this.explorerAPI.getMvsApi(loadedProfile).getContents(remoteFilePath, {
+            returnEtag: true,
+            binary: true,
+            stream: passThrough,
+          });
       } else
-        await this.explorerAPI.getUssApi(loadedProfile).getContents(path, {
-          returnEtag: true,
-          binary: true,
-          stream: passThrough,
-        });
+        await this.explorerAPI .getUssApi(loadedProfile).getContents(remoteFilePath, {
+            returnEtag: true,
+            binary: true,
+            stream: passThrough,
+          });
       const content = Buffer.concat(chunks);
       await vscode.workspace.fs.writeFile(tarUri, content);
       return true;
